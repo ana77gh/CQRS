@@ -10,4 +10,13 @@
     <ProjectReference Include="..\CqrsDemo.Domain\CqrsDemo.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Products\Queries\GetAllProducts\" />
+  </ItemGroup>
+
 </Project>
