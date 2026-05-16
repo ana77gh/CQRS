@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using System.Reflection;
 using CqrsDemo.Application.Common.Behaviours;
+using FluentValidation;
+using CqrsDemo.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +22,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add validation behavior to MediatR pipeline
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+// Register validator
+builder.Services.AddValidatorsFromAssembly(Assembly.Load("CqrsDemo.Application"));
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.MapControllers();
 
 app.Run();
