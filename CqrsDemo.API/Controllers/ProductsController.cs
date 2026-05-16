@@ -17,6 +17,7 @@ namespace CqrsDemo.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(CreateProductCommand command)
         {
             var productId = await _mediator.Send(command);

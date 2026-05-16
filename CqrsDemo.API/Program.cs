@@ -20,6 +20,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseInMemoryDatabase("CqrsDemoDb"));
 
+// -- Pipeline order important! (outer->inner)
+// Add logging behaviour to MediatR pipeline
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
 // Add validation behavior to MediatR pipeline
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 // Register validator
