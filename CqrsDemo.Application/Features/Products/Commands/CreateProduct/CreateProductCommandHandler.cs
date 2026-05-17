@@ -1,4 +1,5 @@
 using CqrsDemo.Application.Common.Interfaces;
+using CqrsDemo.Application.Features.Products.Events;
 using CqrsDemo.Domain.Entities;
 using MediatR;
 
@@ -7,10 +8,12 @@ namespace CqrsDemo.Application.Features.Products.Commands.CreateProduct
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
     {
         private readonly IApplicationDbContext _context;
+        private readonly IPublisher _publisher;
 
-        public CreateProductCommandHandler(IApplicationDbContext context)
+        public CreateProductCommandHandler(IApplicationDbContext context, IPublisher publisher)
         {
             _context = context;
+            _publisher = publisher;
         }
 
         public async Task<Guid> Handle(
@@ -26,6 +29,12 @@ namespace CqrsDemo.Application.Features.Products.Commands.CreateProduct
 
             await _context.Products.AddAsync(product, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
+            await _publisher.Publish(
+                new ProductCreatedEvent(
+                    product.Id,
+                    product.Name,
+                    product.Price),
+                cancellationToken);
 
             return product.Id;
         }
